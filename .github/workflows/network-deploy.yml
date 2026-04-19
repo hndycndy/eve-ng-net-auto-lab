@@ -45,6 +45,10 @@ jobs:
     needs: validate
     runs-on: self-hosted
     environment: lab
+    env:
+      LAB_ANSIBLE_USER: ${{ secrets.LAB_ANSIBLE_USER }}
+      LAB_ANSIBLE_PASSWORD: ${{ secrets.LAB_ANSIBLE_PASSWORD }}
+      LAB_ENABLE_PASSWORD: ${{ secrets.LAB_ENABLE_PASSWORD }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v5
@@ -59,15 +63,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible paramiko ansible-pylibssh
           ansible-galaxy collection install -r requirements.yml
-
-      - name: Build runtime secrets file
-        run: |
-          mkdir -p inventories/lab/group_vars
-          cat > inventories/lab/group_vars/secrets.yml <<EOF
-          ansible_user: ${{ secrets.LAB_ANSIBLE_USER }}
-          ansible_password: ${{ secrets.LAB_ANSIBLE_PASSWORD }}
-          ansible_become_password: ${{ secrets.LAB_ENABLE_PASSWORD }}
-          EOF
 
       - name: Render configs
         run: |
