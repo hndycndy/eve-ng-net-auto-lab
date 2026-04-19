@@ -1,0 +1,37 @@
+hostname {{ hostname }}
+ip domain name lab.local
+
+interface Loopback0
+ description RID
+ ip address {{ loopback0_ip }} {{ loopback0_mask }}
+
+{% for intf in interfaces %}
+interface {{ intf.name }}
+ description {{ intf.description }}
+ ip address {{ intf.ip }} {{ intf.mask }}
+ no shutdown
+{% endfor %}
+
+router ospf {{ ospf_process_id }}
+ router-id {{ router_id }}
+ passive-interface Loopback0
+{% for intf in interfaces if intf.ospf %}
+ network {{ intf.ip }} 0.0.0.0 area 0
+{% endfor %}
+ network {{ loopback0_ip }} 0.0.0.0 area 0
+
+router bgp {{ bgp_as }}
+ bgp router-id {{ router_id }}
+ bgp log-neighbor-changes
+ neighbor IBGP peer-group
+ neighbor IBGP remote-as {{ bgp_as }}
+ neighbor IBGP update-source Loopback0
+{% for nbr in bgp_neighbors %}
+ neighbor {{ nbr.neighbor_ip }} peer-group IBGP
+{% endfor %}
+ address-family ipv4
+  network {{ loopback0_ip }} mask 255.255.255.255
+{% for nbr in bgp_neighbors %}
+  neighbor {{ nbr.neighbor_ip }} activate
+{% endfor %}
+ exit-address-family

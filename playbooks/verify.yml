@@ -1,0 +1,24 @@
+---
+- name: Verify OSPF and BGP state
+  hosts: routers
+  gather_facts: false
+  tasks:
+    - name: Check OSPF neighbors
+      cisco.ios.ios_command:
+        commands:
+          - show ip ospf neighbor
+      register: ospf_output
+
+    - name: Check BGP summary
+      cisco.ios.ios_command:
+        commands:
+          - show ip bgp summary
+      register: bgp_output
+
+    - name: Display OSPF neighbors
+      ansible.builtin.debug:
+        msg: "{{ ospf_output.stdout[0] }}"
+
+    - name: Display BGP summary
+      ansible.builtin.debug:
+        msg: "{{ bgp_output.stdout[0] }}"

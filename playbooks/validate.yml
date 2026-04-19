@@ -1,0 +1,14 @@
+---
+- name: Validate SSH and basic show command
+  hosts: routers
+  gather_facts: false
+  tasks:
+    - name: Run show version
+      cisco.ios.ios_command:
+        commands:
+          - show version
+      register: show_ver
+
+    - name: Print hostname output
+      ansible.builtin.debug:
+        var: show_ver.stdout_lines

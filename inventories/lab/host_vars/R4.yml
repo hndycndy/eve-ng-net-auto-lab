@@ -1,0 +1,27 @@
+---
+hostname: R4
+router_id: 4.4.4.4
+loopback0_ip: 4.4.4.4
+loopback0_mask: 255.255.255.255
+
+interfaces:
+  - name: GigabitEthernet0/1
+    description: TO_R2
+    ip: 10.0.24.2
+    mask: 255.255.255.252
+    ospf: true
+  - name: GigabitEthernet0/2
+    description: TO_R5
+    ip: 10.0.45.1
+    mask: 255.255.255.252
+    ospf: true
+
+bgp_neighbors:
+  - neighbor_ip: 1.1.1.1
+    remote_as: 65000
+  - neighbor_ip: 2.2.2.2
+    remote_as: 65000
+  - neighbor_ip: 3.3.3.3
+    remote_as: 65000
+  - neighbor_ip: 5.5.5.5
+    remote_as: 65000
