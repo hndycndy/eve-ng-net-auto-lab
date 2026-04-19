@@ -1,11 +1,8 @@
 ---
 ansible_connection: ansible.netcommon.network_cli
 ansible_network_os: cisco.ios.ios
-ansible_user: admin
-ansible_password: admin123
 ansible_become: true
 ansible_become_method: enable
-ansible_become_password: admin123
 
 ospf_process_id: 10
 bgp_as: 65000
